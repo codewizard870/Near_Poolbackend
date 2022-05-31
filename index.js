@@ -14,7 +14,7 @@ const fs = require('fs');
 const path = require("path");
 const { keyStores, KeyPair, connect, Contract } = require("near-api-js");
 
-var near;
+let near;
 var formidable = require('formidable');
 
 app.use(express.json());
@@ -47,6 +47,7 @@ async function init(){
   near = await connect(
     config
   );
+console.log(near)
 }
 async function withdraw(sender, amount, coinType) {
   let coins = StableCoins.filter((coin) => coin.upcoming == false);
@@ -87,8 +88,6 @@ console.log(withdraw_msg);
     return "failed"
   }
 }
-init();
-withdraw('alenzertest.testnet', 1000, 'wBTC');
 
 app.post("/withdraw", async function (req, res) {
   var form = new formidable.IncomingForm();
@@ -116,6 +115,7 @@ app.post("/withdraw", async function (req, res) {
 
 
 async function payReward() {
+console.log(near)
   const account = await near.account("staking_treasury.testnet");
   const contract = new Contract(
     account, // the account object that is connecting
@@ -136,6 +136,8 @@ async function payReward() {
     return "failed"
   }
 }
+init();
+// setTimeout(() => payReward(), 5000);
 
 async function farm() {
   let coins = StableCoins.filter((coin) => coin.upcoming == false);
