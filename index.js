@@ -135,8 +135,6 @@ async function payReward() {
     return "failed"
   }
 }
-init();
-// setTimeout(() => withdraw(), 5000);
 
 async function farm() {
   let coins = StableCoins.filter((coin) => coin.upcoming == false);
@@ -194,35 +192,41 @@ var job = nodeCron.schedule('*/10 * * * *', async function () {//m h day month d
 });
 
 
-// async function potProcess() {
-//   let msg_pot = {
-//     "pot_process": {}
-//   };
+async function potProcess() {
+  const account = await near.account("staking_treasury.testnet");
+  const contract = new Contract(
+    account, // the account object that is connecting
+    CONTRACT_NAME,
+    {
+      viewMethods: ["get_status"],
+      changeMethods: ["pot_process"],
+    }
+  );
 
-//   const pot = new MsgExecuteContract(
-//     mk.accAddress,
-//     poolAddress,
-//     msg_pot,
-//     {}
-//   )
+  try{
+    await contract.pot_process();
+    console.log("pot process success")
+    return "success";
+  }
+  catch(e){
+    console.log("pot process failed");
+    return "failed"
+  }
+}
 
-//   let res = await EstimateSend([pot], "pot_process");
-//   if (res == "success") console.log("pot process suceess");
-//   else console.log("pot process failed");
-//   return res;
-// }
+var job2 = nodeCron.schedule('0 0 0 28 * *', async function () {//s m h day month dayOfweek
+  console.log("Pot process start")
+  let res = 'success';
+  let count = 0;
+  do {
+    res = await potProcess();
+    await sleep(6000);
+    count++;
+  } while (res != 'success' && count < 10)
+});
 
-// var job2 = nodeCron.schedule('0 0 0 28 * *', async function () {//s m h day month dayOfweek
-//   console.log("Pot process start")
-//   let res = 'success';
-//   let count = 0;
-//   do {
-//     res = await potProcess();
-//     await sleep(6000);
-//     count++;
-//   } while (res != 'success' && count < 10)
-// });
-
+init();
+setTimeout(() => potProcess(), 5000);
 
 app.get('/', (req, res) => res.send("success v21"))
 
