@@ -122,12 +122,12 @@ async function payReward() {
     CONTRACT_NAME,
     {
       viewMethods: ["get_status"],
-      changeMethods: ["reward"],
+      changeMethods: ["rewards"],
     }
   );
 
   try{
-    await contract.reward();
+    await contract.rewards();
     console.log("reward success")
     return "success";
   }
