@@ -68,7 +68,7 @@ async function withdraw(sender, amount, coinType) {
     amount: amount,
     price: price
   }
-
+console.log(withdraw_msg);
   const account = await near.account("staking_treasury.testnet");
   const contract = new Contract(
     account, // the account object that is connecting
