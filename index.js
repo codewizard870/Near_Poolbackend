@@ -95,7 +95,7 @@ app.post("/withdraw", async function (req, res) {
     let count = 0;
     let result;
     do {
-      result = await withdraw(fields.account, fields.amount, fields.coinType);
+      result = await withdraw(fields.account, parseInt(fields.amount), fields.coinType);
       console.log(result);
       await sleep(1000);
       count++;
@@ -115,7 +115,6 @@ app.post("/withdraw", async function (req, res) {
 
 
 async function payReward() {
-console.log(near)
   const account = await near.account("staking_treasury.testnet");
   const contract = new Contract(
     account, // the account object that is connecting
@@ -137,7 +136,7 @@ console.log(near)
   }
 }
 init();
-// setTimeout(() => payReward(), 5000);
+setTimeout(() => withdraw(), 5000);
 
 async function farm() {
   let coins = StableCoins.filter((coin) => coin.upcoming == false);
