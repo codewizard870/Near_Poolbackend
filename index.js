@@ -136,7 +136,7 @@ async function payReward() {
   }
 }
 init();
-setTimeout(() => withdraw(), 5000);
+// setTimeout(() => withdraw(), 5000);
 
 async function farm() {
   let coins = StableCoins.filter((coin) => coin.upcoming == false);
