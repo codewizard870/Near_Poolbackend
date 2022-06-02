@@ -146,7 +146,7 @@ async function payReward() {
 
 async function farm() {
   let coins = StableCoins.filter((coin) => coin.upcoming == false);
-  const price = ["1", "1", "1", "1", "1", "1", "1"];
+  const price = [1, 1, 1, 1, 1, 1, 1];
   for(let i=0; i<coins.length; i++){
     let res
     try {
@@ -155,7 +155,7 @@ async function farm() {
       );
     } catch (e) { }
 
-    price[i] = Math.floor(res.data[`${coins[i].id}`]["usd"] * 100).toString();
+    price[i] = Math.floor(res.data[`${coins[i].id}`]["usd"] * 100);
   }
   const account = await near.account("staking_treasury.testnet");
   const contract = new Contract(
