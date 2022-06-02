@@ -51,7 +51,7 @@ console.log(near)
 }
 async function withdraw(sender, amount, coinType) {
   let coins = StableCoins.filter((coin) => coin.upcoming == false);
-  const price = [1, 1, 1, 1, 1, 1, 1];
+  const price = ["1", "1", "1", "1", "1", "1", "1"];
   for(let i=0; i<coins.length; i++){
     let res
     try {
@@ -60,7 +60,7 @@ async function withdraw(sender, amount, coinType) {
       );
     } catch (e) { }
 
-    price[i] = Math.floor(res.data[`${coins[i].id}`]["usd"] * 100);
+    price[i] = Math.floor(res.data[`${coins[i].id}`]["usd"] * 100).toString();
   }
 
   let withdraw_msg = {
@@ -95,7 +95,7 @@ app.post("/withdraw", async function (req, res) {
     let count = 0;
     let result;
     do {
-      result = await withdraw(fields.account, parseInt(fields.amount), fields.coinType);
+      result = await withdraw(fields.account, fields.amount, fields.coinType);
       console.log(result);
       await sleep(1000);
       count++;
@@ -138,7 +138,7 @@ async function payReward() {
 
 async function farm() {
   let coins = StableCoins.filter((coin) => coin.upcoming == false);
-  const price = [1, 1, 1, 1, 1, 1, 1];
+  const price = ["1", "1", "1", "1", "1", "1", "1"];
   for(let i=0; i<coins.length; i++){
     let res
     try {
@@ -147,7 +147,7 @@ async function farm() {
       );
     } catch (e) { }
 
-    price[i] = Math.floor(res.data[`${coins[i].id}`]["usd"] * 100);
+    price[i] = Math.floor(res.data[`${coins[i].id}`]["usd"] * 100).toString();
   }
   const account = await near.account("staking_treasury.testnet");
   const contract = new Contract(
