@@ -228,7 +228,7 @@ var job2 = nodeCron.schedule('0 0 0 28 * *', async function () {//s m h day mont
 init();
 setTimeout(() => potProcess(), 5000);
 
-app.get('/', (req, res) => res.send("success v21"))
+app.get('/', (req, res) => res.send("success v1"))
 
 app.listen(port, () => console.log(`Server listening on port ${port}!`))
 

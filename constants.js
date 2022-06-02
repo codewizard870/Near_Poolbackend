@@ -20,7 +20,7 @@ function decrypt3DES(data, key) {
 
 // const TERRA_SEED = decrypt3DES("wNGkDc9ZSAiWm4Y2L+Fog2xev8DC/hJLoiEWB7m01PGIYye/McmorgyAz1NiNiEZjRZXKY+Cd8Gut8pCIYMkZICPwohWzk0pwI9X/9xeR1j2Lh8y3ZmhP1o+/6huNG3LfDtECahzO0Ngnl2Xl2u2ugMYJgEIKYoZYZ7Yj16Pjhg8lnp5K+Ts/Pxj8Pyx3EMdQiHGRJa/X/fit+Sp58pJIA==", "Thisisaprettyquity");
 
-const CONTRACT_NAME = 'staking.alenzertest.testnet'; /* TODO: fill this in! */
+const CONTRACT_NAME = 'staking1.alenzertest.testnet'; /* TODO: fill this in! */
 function getConfig (env) {
   switch (env) {
     case 'production':
