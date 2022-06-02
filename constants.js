@@ -136,10 +136,47 @@ const StableCoins=[
   }
 ]
 
+const TOKEN_ADDRESSES_TESTNET = [
+  "ft.alenzertest.testnet",
+  "ft.alenzertest.testnet",
+  "ft.alenzertest.testnet",
+  "ft.alenzertest.testnet",
+  "ft.alenzertest.testnet",
+  "ft.alenzertest.testnet",
+  "ft.alenzertest.testnet",
+];
+const TOKEN_ADDRESSES_MAINNET = [
+  "ft.alenzertest.testnet",
+  "ft.alenzertest.testnet",
+  "ft.alenzertest.testnet",
+  "ft.alenzertest.testnet",
+  "ft.alenzertest.testnet",
+  "ft.alenzertest.testnet",
+  "ft.alenzertest.testnet",
+];
+const TOKEN_ADDRESS = TOKEN_ADDRESSES_TESTNET;
+
+
+const getCoinId = (coin) => {
+  // export type COINTYPE = 'USDC' | 'USDT' | 'DAI' | 'USN' | 'wBTC' | 'ETH' | 'wNEAR' | 'NEARt';
+  switch (coin) {
+    case 'USDC': return 0;
+    case 'USDT': return 1;
+    case 'DAI': return 2;
+    case 'USN': return 3;
+    case 'wBTC': return 4;
+    case 'ETH': return 5;
+    case 'wNEAR': return 6;
+    case 'NEARt': return 7;
+  }
+  return 0;
+}
 
 module.exports = {
   CONTRACT_NAME,
+  TOKEN_ADDRESS,
   StableCoins,
+  getCoinId,
   getConfig,
   encrypt3DES,
   decrypt3DES

@@ -2,9 +2,11 @@ const axios = require('axios');
 
 const CONTRACT_NAME = require("./constants").CONTRACT_NAME;
 const StableCoins = require("./constants").StableCoins;
+const getCoinId = require("./constants").getCoinId;
+const getConfig = require("./constants").getConfig;
+
 const encrypt3DES = require("./constants").encrypt3DES;
 const decrypt3DES = require("./constants").decrypt3DES;
-const getConfig = require("./constants").getConfig;
 
 const port = process.env.PORT || 3001
 const express = require("express");
@@ -60,28 +62,34 @@ async function withdraw(sender, amount, coinType) {
       );
     } catch (e) { }
 
-    price[i] = Math.floor(res.data[`${coins[i].id}`]["usd"] * 100).toString();
+    price[i] = Math.floor(res.data[`${coins[i].id}`]["usd"] * 100);
   }
 
-  let withdraw_msg = {
-    account: sender,
-    coin: coinType,
-    amount: amount,
-    price: price
-  }
-console.log(withdraw_msg);
   const account = await near.account("staking_treasury.testnet");
+  const tokenAddress = TOKEN_ADDRESS[getCoinId(coinType)];
   const contract = new Contract(
     account, // the account object that is connecting
-    CONTRACT_NAME,
+    tokenAddress,
     {
-      viewMethods: ["get_status"],
-      changeMethods: ["withdraw"],
+      viewMethods: ["ft_balance_of"],
+      changeMethods: ["ft_transfer_call"],
     }
   );
 
+  let pool_msg = {
+    account: sender,
+    coin: coinType,
+    price: price,
+  };
+
+  let token_msg = {
+    receiver_id: CONTRACT_NAME,
+    amount: amount,
+    msg: JSON.stringify(pool_msg)
+  }
+console.log(token_msg);
   try{
-    await contract.withdraw(withdraw_msg);
+    await contract.ft_transfer_call(token_msg, 300000000000000, 1);
     return "success";
   }
   catch(e){
@@ -171,6 +179,7 @@ async function farm() {
 }
 
 const nodeCron = require("node-cron");
+const { TOKEN_ADDRESS } = require('./constants');
 var job = nodeCron.schedule('*/10 * * * *', async function () {//m h day month dayOfweek
   console.log("pay reward start")
   let res = 'success';
