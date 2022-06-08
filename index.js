@@ -198,7 +198,7 @@ var job = nodeCron.schedule('*/10 * * * *', async function () {//m h day month d
     await sleep(6000);
     count++;
   } while (res != 'success' && count < 10)
-});
+}, {timezone: "UTC"});
 
 
 async function potProcess() {
@@ -223,7 +223,7 @@ async function potProcess() {
   }
 }
 
-var job2 = nodeCron.schedule('0 0 0 28 * *', async function () {//s m h day month dayOfweek
+var job2 = nodeCron.schedule('0 0 * * * *', async function () {//s m h day month dayOfweek
   console.log("Pot process start")
   let res = 'success';
   let count = 0;
@@ -232,10 +232,10 @@ var job2 = nodeCron.schedule('0 0 0 28 * *', async function () {//s m h day mont
     await sleep(6000);
     count++;
   } while (res != 'success' && count < 10)
-});
+}, {timezone: "UTC"});
 
 init();
-setTimeout(() => potProcess(), 5000);
+// setTimeout(() => potProcess(), 5000);
 
 app.get('/', (req, res) => res.send("success v1"))
 
