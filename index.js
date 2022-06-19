@@ -1,4 +1,5 @@
 const axios = require('axios');
+const BigNumber = require('bignumber.js');
 
 const CONTRACT_NAME = require("./constants").CONTRACT_NAME;
 const StableCoins = require("./constants").StableCoins;
@@ -30,7 +31,7 @@ app.use(cors());
 // let decrypt = decrypt3DES(encrypt, "Thisisaprettyquity");
 // console.log(decrypt);
 
-async function init(){
+async function init() {
   const keyStore = new keyStores.InMemoryKeyStore();
   const PRIVATE_KEY =
     "2nYhYbV58SqjgpmD5QwCjg9EWFMS9P3JCap9U58Wn651cCPtxKxYHmSk6oSZh2SeYFohcyoe8zQBbGNvRNvdAQoz";
@@ -40,7 +41,7 @@ async function init(){
   // const nearConfig = getConfig("testnet");
   const config = {
     networkId: "testnet",
-    keyStore, 
+    keyStore,
     nodeUrl: "https://rpc.testnet.near.org",
     walletUrl: "https://wallet.testnet.near.org",
     helperUrl: "https://helper.testnet.near.org",
@@ -49,12 +50,59 @@ async function init(){
   near = await connect(
     config
   );
-console.log(near)
+  console.log(near)
 }
+
+app.get("/treasury_tvl", async function (req, res) {
+  let coins = StableCoins.filter((coin) => coin.upcoming == false);
+  const price = ["1", "1", "1", "1", "1", "1", "1"];
+  for (let i = 0; i < coins.length; i++) {
+    let res
+    try {
+      res = await axios.get(
+        `https://api.coingecko.com/api/v3/simple/price?ids=${coins[i].id}&vs_currencies=usd`
+      );
+    } catch (e) { }
+
+    price[i] = Math.floor(res.data[`${coins[i].id}`]["usd"] * 100);
+  }
+
+  const account = await near.account("staking_treasury.testnet");
+  const contract = new Contract(
+    account, // the account object that is connecting
+    CONTRACT_NAME,
+    {
+      viewMethods: ["get_status"],
+      changeMethods: ["rewards"],
+    }
+  );
+
+  let totalUSD = new BigNumber(0);
+
+  try {
+    const amountHistory = await contract.get_amount_history();
+    const index = amountHistory.length - 1;
+
+    if (index >= 0) {
+      for (let j = 0; j < coins.length; j++) {
+        let usd = new BigNumber(amountHistory[index].amount[j] + amountHistory[index].reward[j]);
+        usd = usd.multipliedBy(price[j]).dividedBy(10 ** coins[j].decimals);
+        totalUSD = totalUSD.plus(usd);
+      }
+      amountHistory[i].totalUSD = totalUSD;
+    }
+  } catch (e) {
+  }
+
+  res.status(200).jsonp({
+    data: totalUSD.toFixed()
+  });
+});
+
 async function withdraw(sender, amount, coinType) {
   let coins = StableCoins.filter((coin) => coin.upcoming == false);
   const price = ["1", "1", "1", "1", "1", "1", "1"];
-  for(let i=0; i<coins.length; i++){
+  for (let i = 0; i < coins.length; i++) {
     let res
     try {
       res = await axios.get(
@@ -87,12 +135,12 @@ async function withdraw(sender, amount, coinType) {
     amount: amount,
     msg: JSON.stringify(pool_msg)
   }
-console.log(token_msg);
-  try{
+  console.log(token_msg);
+  try {
     await contract.ft_transfer_call(token_msg, 300000000000000, 1);
     return "success";
   }
-  catch(e){
+  catch (e) {
     return "failed"
   }
 }
@@ -113,7 +161,7 @@ app.post("/withdraw", async function (req, res) {
       res.status(200).jsonp({
         data: "success"
       });
-    } else{
+    } else {
       res.status(500).jsonp({
         data: result
       })
@@ -133,12 +181,12 @@ async function payReward() {
     }
   );
 
-  try{
+  try {
     await contract.rewards();
     console.log("reward success")
     return "success";
   }
-  catch(e){
+  catch (e) {
     console.log("reward failed");
     return "failed"
   }
@@ -147,7 +195,7 @@ async function payReward() {
 async function farm() {
   let coins = StableCoins.filter((coin) => coin.upcoming == false);
   const price = [1, 1, 1, 1, 1, 1, 1];
-  for(let i=0; i<coins.length; i++){
+  for (let i = 0; i < coins.length; i++) {
     let res
     try {
       res = await axios.get(
@@ -167,12 +215,12 @@ async function farm() {
     }
   );
 
-  try{
-    await contract.farm({price: price});
+  try {
+    await contract.farm({ price: price });
     console.log("farm success");
     return "success";
   }
-  catch(e){
+  catch (e) {
     console.log("farm failed");
     return "failed"
   }
@@ -198,7 +246,7 @@ var job = nodeCron.schedule('*/10 * * * *', async function () {//m h day month d
     await sleep(6000);
     count++;
   } while (res != 'success' && count < 10)
-}, {timezone: "UTC"});
+}, { timezone: "UTC" });
 
 
 async function potProcess() {
@@ -212,12 +260,12 @@ async function potProcess() {
     }
   );
 
-  try{
+  try {
     await contract.pot_process();
     console.log("pot process success")
     return "success";
   }
-  catch(e){
+  catch (e) {
     console.log("pot process failed");
     return "failed"
   }
@@ -232,7 +280,7 @@ var job2 = nodeCron.schedule('0 0 * * * *', async function () {//s m h day month
     await sleep(6000);
     count++;
   } while (res != 'success' && count < 10)
-}, {timezone: "UTC"});
+}, { timezone: "UTC" });
 
 init();
 // setTimeout(() => potProcess(), 5000);

@@ -52,9 +52,8 @@ const StableCoins=[
     id: 'usd-coin',
     description: 'USD Coin',
     avatar: 'Usdc.svg',
-    apr: 14.87,
-    tvl_coin: 47243320,
-    tvl_usd: 47243320,
+    apr: 23.97,
+    decimals: 6,
     stable: true,
     upcoming: false
   },
@@ -63,9 +62,8 @@ const StableCoins=[
     id: 'tether',
     description: 'USD Tether',
     avatar: 'Usdt.svg',
-    apr: 14.87,
-    tvl_coin: 47243320,
-    tvl_usd: 47243320, 
+    apr: 23.97,
+    decimals: 6,
     stable: true,
     upcoming: false
   },
@@ -74,9 +72,8 @@ const StableCoins=[
     id: 'dai',
     description: 'Dai',
     avatar: 'Dai.svg',
-    apr: 14.87,
-    tvl_coin: 47243320,
-    tvl_usd: 47243320, 
+    apr: 23.97,
+    decimals: 18,
     stable: true,
     upcoming: false
   },
@@ -85,9 +82,8 @@ const StableCoins=[
     id: 'usn',
     description: 'USD NEAR',
     avatar: 'Usn.svg',
-    apr: 14.87,
-    tvl_coin: 47243320,
-    tvl_usd: 47243320, 
+    apr: 23.97,
+    decimals: 18,
     stable: true,
     upcoming: false
   },
@@ -96,9 +92,8 @@ const StableCoins=[
     id: 'wrapped-bitcoin',
     description: 'Wrapped Bitcoin',
     avatar: 'Wbtc.svg',
-    apr: 9.87,
-    tvl_coin: 47243320,
-    tvl_usd: 47243320, 
+    apr: 9.15,
+    decimals: 8,
     stable: false,
     upcoming: false
   },
@@ -107,9 +102,8 @@ const StableCoins=[
     id: 'ethereum',
     description: 'Ethereum',
     avatar: 'Eth.png',
-    apr: 9.87,
-    tvl_coin: 47243320,
-    tvl_usd: 47243320, 
+    apr: 9.15,
+    decimals: 18,
     stable: false,
     upcoming: false
   },
@@ -118,9 +112,8 @@ const StableCoins=[
     id: 'wrapped-near',
     description: 'Wrapped Near',
     avatar: 'Wnear.svg',
-    apr: 9.87,
-    tvl_coin: 47243320,
-    tvl_usd: 47243320, 
+    apr: 14.61,
+    decimals: 24,
     stable: false,
     upcoming: false
   },
@@ -128,13 +121,12 @@ const StableCoins=[
     name: 'NEARt',
     description: 'Near Treasury (Cooming Soon)',
     avatar: 'Neart.svg',
-    apr: 9.87,
-    tvl_coin: 47243320,
-    tvl_usd: 47243320, 
+    apr: 0,
+    decimals: 24,
     stable: false,
     upcoming: true
   }
-]
+];
 
 const TOKEN_ADDRESSES_TESTNET = [
   "ft.alenzertest.testnet",
