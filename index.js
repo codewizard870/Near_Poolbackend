@@ -81,17 +81,19 @@ app.get("/treasury_tvl", async function (req, res) {
 
   try {
     const amountHistory = await contract.get_amount_history();
+console.log(amountHistory)
     const index = amountHistory.length - 1;
-
+console.log(index)
     if (index >= 0) {
       for (let j = 0; j < coins.length; j++) {
         let usd = new BigNumber(amountHistory[index].amount[j] + amountHistory[index].reward[j]);
         usd = usd.multipliedBy(price[j]).dividedBy(10 ** coins[j].decimals);
         totalUSD = totalUSD.plus(usd);
+console.log(totalUSD.toFixed())
       }
-      amountHistory[i].totalUSD = totalUSD;
     }
   } catch (e) {
+    console.log(e)
   }
 
   res.status(200).jsonp({
