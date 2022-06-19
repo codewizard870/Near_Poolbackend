@@ -72,7 +72,7 @@ app.get("/treasury_tvl", async function (req, res) {
     account, // the account object that is connecting
     CONTRACT_NAME,
     {
-      viewMethods: ["get_status"],
+      viewMethods: ["get_amount_history"],
       changeMethods: ["rewards"],
     }
   );
