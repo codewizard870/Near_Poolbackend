@@ -102,7 +102,7 @@ app.get("/treasury_tvl", async function (req, res) {
   const totalUSD = await getTVL();
 
   res.status(200).jsonp({
-    data: totalUSD.toNumber()
+    TVL: totalUSD.toFixed()
   });
 });
 
