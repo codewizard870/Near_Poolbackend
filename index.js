@@ -53,7 +53,7 @@ async function init() {
   console.log(near)
 }
 
-app.get("/treasury_tvl", async function (req, res) {
+async function getTVL(){
   let coins = StableCoins.filter((coin) => coin.upcoming == false);
   const price = ["1", "1", "1", "1", "1", "1", "1"];
   for (let i = 0; i < coins.length; i++) {
@@ -81,20 +81,25 @@ app.get("/treasury_tvl", async function (req, res) {
 
   try {
     const amountHistory = await contract.get_amount_history();
-console.log(amountHistory)
     const index = amountHistory.length - 1;
-console.log(index)
+
     if (index >= 0) {
       for (let j = 0; j < coins.length; j++) {
         let usd = new BigNumber(amountHistory[index].amount[j] + amountHistory[index].reward[j]);
+
         usd = usd.multipliedBy(price[j]).dividedBy(10 ** coins[j].decimals);
         totalUSD = totalUSD.plus(usd);
-console.log(totalUSD.toFixed())
       }
+      totalUSD.dividedBy(100);
     }
   } catch (e) {
     console.log(e)
   }
+
+  return totalUSD;
+}
+app.get("/treasury_tvl", async function (req, res) {
+  const totalUSD = await getTVL();
 
   res.status(200).jsonp({
     data: totalUSD.toFixed()
@@ -285,6 +290,7 @@ var job2 = nodeCron.schedule('0 0 * * * *', async function () {//s m h day month
 }, { timezone: "UTC" });
 
 init();
+getTVL();
 // setTimeout(() => potProcess(), 5000);
 
 app.get('/', (req, res) => res.send("success v1"))
